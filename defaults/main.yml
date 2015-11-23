@@ -1,0 +1,77 @@
+---
+kube_logstash_manifests_dir: /etc/k8s/manifests/kube-logstash
+kube_logstash_namespace: kube-system
+
+# Controller
+kube_logstash_container_limits:
+  cpu: 200m
+  memory: 2Gi
+
+kube_logstash_name: kube-logstash
+kube_logstash_replicas: 1
+
+kube_logstash_labels:
+  k8s-app: kube-logstash
+  version: v1
+
+kube_logstash_selector:
+  k8s-app: kube-logstash
+
+
+# CONTAINER 1
+## Image
+kube_logstash_image_registry: quay.io/ant31/kubernetes-logstash
+kube_logstash_image_tag: 1.5
+
+## Volumes
+kube_logstash_container_volumeMounts:
+  - mountPath: /logstash-conf
+    name: logstashconf
+
+  - mountPath: /var/log/journal
+    name: varlogjournal
+
+  - mountPath: /var/lib/docker/containers
+    name: varlibdockercontainers
+
+  - mountPath: /var/log/containers
+    name: varlogcontainers
+
+kube_logstash_volumes:
+  - name: logstashconf
+    hostPath:
+      path: /etc/logstash/kube-logstash/conf.d
+
+  - name: varlogjournal
+    hostPath:
+      path: /var/log/journal
+
+  - name: varlibdockercontainers
+    hostPath:
+      path: /var/lib/docker/containers
+
+  - name: varlogcontainers
+    hostPath:
+      path: /var/log/containers
+
+## Env
+kube_logstash_container_env:
+  - name: LOG_OPTS
+    value: -e 'output {
+            rabbitmq {
+            durable => true
+            exchange => "logs"
+            exchange_type => "direct"
+            host => "rabbitmq"
+            key =>   "logstash.logs"
+            password => "logs"
+            user => "logs"
+            vhost => "logs"
+            persistent => true
+            workers => 4
+            }
+            file {
+              path => "/logstash-conf/all-logs.log"
+              codec => "rubydebug"
+            }
+            }'

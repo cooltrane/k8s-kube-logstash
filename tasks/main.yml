@@ -1,0 +1,6 @@
+---
+- include: "{{role_path}}/../k8s-common/tasks/common.yml"
+  vars:
+    k8s_manifests_dir: '{{kube_logstash_manifests_dir}}'
+    k8s_resources: '{{kube_logstash_resources}}'
+    k8s_namespace: "{{ kube_logstash_namespace | default('default') }}"

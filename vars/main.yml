@@ -1,0 +1,5 @@
+---
+kube_logstash_resources:
+  - file: kube_logstash-rc.yml
+    resource: rc
+    name: kube-logstash
