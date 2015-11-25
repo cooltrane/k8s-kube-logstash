@@ -1,0 +1,52 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: {{ kube_logstash_name }}
+  labels: {{ kube_logstash_labels }}
+spec:
+  template:
+    metadata:
+      labels: {{ kube_logstash_labels }}
+    spec:
+      containers:
+      - name: kube-logstash
+        image: {{ kube_logstash_image_registry }}{% if  kube_logstash_image_tag is defined and kube_logstash_image_tag is not none %}:{{ kube_logstash_image_tag}}{% endif %}
+
+        resources:
+{% if kube_logstash_container_limits is defined %}
+          limits:
+{% if kube_logstash_container_limits.cpu is defined %}
+            cpu: {{ kube_logstash_container_limits.cpu }}
+{% endif %}
+{% if kube_logstash_container_limits.memory is defined %}
+            memory: {{ kube_logstash_container_limits.memory }}
+{% endif %}
+{% endif %}
+{% if kube_logstash_container_command is defined %}
+        command: {{ kube_logstash_container_command }}
+{% endif %}
+{% if kube_logstash_container_args is defined %}
+        args: {{ kube_logstash_container_args }}
+{% endif %}
+{% if kube_logstash_container_env is defined %}
+        env:
+{% for env in kube_logstash_container_env %}
+          - name: "{{ env.name }}"
+            value: "{{ env.value }}"
+{% endfor %}
+{% endif %}
+{% if kube_logstash_container_volumeMounts is defined %}
+        volumeMounts: {{ kube_logstash_container_volumeMounts}}
+{% endif %}
+{% if kube_logstash_container_ports is defined %}
+        ports: {{ kube_logstash_container_ports}}
+{% endif %}
+{% if kube_logstash_container_livenessprobe is defined %}
+        livenessProbe: {{ kube_logstash_container_livenessprobe }}
+{% endif %}
+{% if kube_logstash_container_readinessprobe is defined %}
+        readinessProbe: {{ kube_logstash_container_readinessprobe}}
+{% endif %}
+{% if kube_logstash_volumes is defined %}
+      volumes: {{ kube_logstash_volumes}}
+{% endif %}
