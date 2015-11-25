@@ -53,25 +53,3 @@ kube_logstash_volumes:
   - name: varlogcontainers
     hostPath:
       path: /var/log/containers
-
-## Env
-kube_logstash_container_env:
-  - name: LOG_OPTS
-    value: -e 'output {
-            rabbitmq {
-            durable => true
-            exchange => \"logs\"
-            exchange_type => \"direct\"
-            host => \"rabbitmq\"
-            key =>   \"logstash.logs\"
-            password => \"logs\"
-            user => \"logs\"
-            vhost => \"logs\"
-            persistent => true
-            workers => 4
-            }
-            file {
-              path => \"/logstash-conf/all-logs.log\"
-              codec => \"rubydebug\"
-            }
-            }'
