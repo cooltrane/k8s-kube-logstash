@@ -6,8 +6,9 @@ kube_logstash_resources:
 
   - file: kube-logstash-secret.yml
     resource: secrets
-    name: kube-logstash
+    name: kube-logstash-conf
 
 kube_logstash_default_conffiles:
-  - "{{role_path}}/files/20_filter_journald.conf"
-  - "{{role_path}}/files/20_filter_kubernetes.conf"
+  - "{{role_path}}/files/20-input-journald.cfg"
+  - "{{role_path}}/files/20-input-kubernetes.cfg"
+  - "{{role_path}}/files/30-output-file.cfg"
