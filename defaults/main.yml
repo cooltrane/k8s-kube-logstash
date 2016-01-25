@@ -53,3 +53,10 @@ kube_logstash_volumes:
   - name: varlogcontainers
     hostPath:
       path: /var/log/containers
+
+
+
+kube_logstash_conffiles:
+  - "{{role_path}}/files/20-input-journald.cfg"
+  - "{{role_path}}/files/20-input-kubernetes.cfg"
+  - "{{role_path}}/files/30-output-file-demo.cfg"

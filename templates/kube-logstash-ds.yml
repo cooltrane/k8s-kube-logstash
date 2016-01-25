@@ -2,11 +2,11 @@ apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
   name: {{ kube_logstash_name }}
-  labels: {{ kube_logstash_labels }}
+  labels: {{ kube_logstash_labels | to_nice_json }}
 spec:
   template:
     metadata:
-      labels: {{ kube_logstash_labels }}
+      labels: {{ kube_logstash_labels | to_nice_json }}
     spec:
       containers:
       - name: kube-logstash
@@ -14,39 +14,22 @@ spec:
 
         resources:
 {% if kube_logstash_container_limits is defined %}
-          limits:
-{% if kube_logstash_container_limits.cpu is defined %}
-            cpu: {{ kube_logstash_container_limits.cpu }}
+          limits: {{kube_logstash_container_limits | to_nice_json}}
 {% endif %}
-{% if kube_logstash_container_limits.memory is defined %}
-            memory: {{ kube_logstash_container_limits.memory }}
-{% endif %}
-{% endif %}
+
 {% if kube_logstash_container_command is defined %}
-        command: {{ kube_logstash_container_command }}
+        command: {{ kube_logstash_container_command | to_nice_json}}
 {% endif %}
+
 {% if kube_logstash_container_args is defined %}
-        args: {{ kube_logstash_container_args }}
+        args: {{ kube_logstash_container_args | to_nice_json}}
 {% endif %}
-{% if kube_logstash_container_env is defined %}
-        env:
-{% for env in kube_logstash_container_env %}
-          - name: "{{ env.name }}"
-            value: "{{ env.value }}"
-{% endfor %}
-{% endif %}
+
+
 {% if kube_logstash_container_volumeMounts is defined %}
-        volumeMounts: {{ kube_logstash_container_volumeMounts}}
+        volumeMounts: {{ kube_logstash_container_volumeMounts | to_nice_json}}
 {% endif %}
-{% if kube_logstash_container_ports is defined %}
-        ports: {{ kube_logstash_container_ports}}
-{% endif %}
-{% if kube_logstash_container_livenessprobe is defined %}
-        livenessProbe: {{ kube_logstash_container_livenessprobe }}
-{% endif %}
-{% if kube_logstash_container_readinessprobe is defined %}
-        readinessProbe: {{ kube_logstash_container_readinessprobe}}
-{% endif %}
+
 {% if kube_logstash_volumes is defined %}
-      volumes: {{ kube_logstash_volumes}}
+      volumes: {{ kube_logstash_volumes | to_nice_json }}
 {% endif %}

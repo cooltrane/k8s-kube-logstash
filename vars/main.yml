@@ -1,9 +1,5 @@
 ---
 
-kube_logstash_container_limits:
-  cpu: 200m
-  memory: 500M
-
 kube_logstash_resources:
   - file: kube-logstash-ds.yml
     resource: ds
@@ -12,8 +8,3 @@ kube_logstash_resources:
   - file: kube-logstash-secret.yml
     resource: secrets
     name: kube-logstash-conf
-
-kube_logstash_default_conffiles:
-  - "{{role_path}}/files/20-input-journald.cfg"
-  - "{{role_path}}/files/20-input-kubernetes.cfg"
-  - "{{role_path}}/files/30-output-file-demo.cfg"
